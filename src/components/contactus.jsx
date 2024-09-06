@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { TextField, Button, Box, Typography } from '@mui/material';
 
 export default function ContactUS() {
     const [formData, setFormData] = useState({
@@ -29,12 +30,9 @@ export default function ContactUS() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
-        console.log('running there');
         if (Object.keys(validationErrors).length === 0) {
-            console.log('running here');
             try {
                 const response = await axios.post('http://localhost:8888/contacts', formData);
-                console.log(response.status);
                 if (response.status === 201) {
                   setSubmitted(true);
                 }
@@ -45,9 +43,7 @@ export default function ContactUS() {
             setErrors(validationErrors);
         }
     };
-    if (submitted) {
-        return <h3>Thank you for contacting us! We will be in touch soon.</h3>;
-    }
+
     // Handle form field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,84 +52,144 @@ export default function ContactUS() {
     };
 
   return (
-    <>
-    <p>Welcome to OpenAgent. We've been around since 2013, and our vision is to make it easy for people to buy, sell and own property.</p>
+    <div className=" p-16 xl:w-[1280px] mx-auto">
+    <Typography variant="body1" gutterBottom sx={{ pl: '2rem', pb: '2rem', fontSize: '2rem',fontWeight: 'bold' }}>
+        Contact us, we love to hear from you
+    </Typography>
+   
+    <div className="flex flex-wrap justify-between items-start">
+        <Box className="w-full md:w-1/2 pr-8 pb-8 pl-8 pt-0">
+            <Typography variant="body1" gutterBottom>
+                Welcome to OpenAgent. We've been around since 2013, and our vision is to make it easy for people to buy, sell and own property.
+            </Typography>
 
-    <p>Here are the different ways you can contact us</p>
-    <h4 style={{ textDecoration: 'underline' }}>Contact Us Details</h4>
+            <Typography variant="body1" gutterBottom sx={{ pt: 2, pb: 2 }}>
+                Here are the different ways you can contact us
+            </Typography>
 
-    <p>Phone: 13 24 34</p>
-    <p>Email: support@openagent.com.au</p>
+            <Typography variant="body1" sx={{ pb: 2, textDecoration: 'underline', fontWeight: 'bold' }} gutterBottom>
+                Contact Us Details
+            </Typography>
 
-    <h4 style={{ textDecoration: 'underline' }}>Postal Address:</h4>
-    <p>PO Box 419, Alexandria NSW 1435</p>
+            <Typography variant="body1" gutterBottom>
+                Phone: 13 24 34
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+                Email: support@openagent.com.au
+            </Typography>
 
-    <h4 style={{ textDecoration: 'underline' }}>Contact centre hours of operation</h4>
-    <p>Monday - Friday 8:30 - 5:00</p>
+            <Typography variant="body1" sx={{ pt: 2, pb: 2, textDecoration: 'underline', fontWeight: 'bold' }} gutterBottom>
+                Postal Address
+            </Typography>
 
-    <h4>Contact Us Form</h4>
+            <Typography variant="body1" gutterBottom>
+                PO Box 419, Alexandria NSW 1435
+            </Typography>
 
-    <form onSubmit={handleSubmit}>
-        <div>
-            <label>First Name</label>
-            <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="First Name"
+            <Typography variant="body1" sx={{ pt: 2, pb: 2,  textDecoration: 'underline', fontWeight: 'bold' }} gutterBottom>
+                Contact Centre Hours of Operation
+            </Typography>
+
+            <Typography variant="body1" gutterBottom>
+                Monday - Friday 8:30 - 5:00
+            </Typography>
+        </Box>
+
+        <Box className="w-full md:w-1/2 p-8 bg-gray-50 min-h-[450px]">
+        { submitted ? (
+            <Box className="text-center">
+                <Typography variant="h5" sx={{fontWeight:'bold'}}>Thank you</Typography>
+                <Typography variant="body1" >Thank you for your feedback. We'll be in touch shortly.</Typography>
+            </Box>
+        ) : (
+        <form onSubmit={handleSubmit}> 
+            <Typography variant="body1" gutterBottom sx={{pb: 2}}>
+                Fill in your details and we'll be in touch right away. Or if you prefer, call us on 13 24 34
+            </Typography>      
+            <Box mb={2}>
+            <TextField
+                label="First Name"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                fullWidth
+                error={!!errors.firstName}
+                helperText={errors.firstName}
+                variant="outlined"
             />
-            {errors.firstName && <span style={{ color: 'red' }}>{errors.firstName}</span>}
-        </div>
+            </Box>
 
-        <div>
-            <label>Last Name</label>
-            <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Last Name"
+            <Box mb={2}>
+            <TextField
+                label="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                fullWidth
+                error={!!errors.lastName}
+                helperText={errors.lastName}
+                variant="outlined"
             />
-            {errors.lastName && <span style={{ color: 'red' }}>{errors.lastName}</span>}
-        </div>
+            </Box>
 
-        <div>
-            <label>Email</label>
-            <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email"
+            <Box mb={2}>
+            <TextField
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                fullWidth
+                error={!!errors.email}
+                helperText={errors.email}
+                variant="outlined"
             />
-            {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
-        </div>
+            </Box>
 
-        <div>
-            <label>Phone</label>
-            <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Phone"
+            <Box mb={2}>
+            <TextField
+                label="Phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                fullWidth
+                error={!!errors.phone}
+                helperText={errors.phone}
+                variant="outlined"
             />
-            {errors.phone && <span style={{ color: 'red' }}>{errors.phone}</span>}
-        </div>
+            </Box>
 
-        <div>
-            <label>Additional Info/Note</label>
-            <textarea
-            name="additionalInfo"
-            value={formData.additionalInfo}
-            onChange={handleChange}
-            placeholder="Any additional information or notes"
+            <Box mb={2}>
+            <TextField
+                label="What do you want to speak to us about"
+                name="additionalInfo"
+                value={formData.additionalInfo}
+                onChange={handleChange}
+                fullWidth
+                multiline
+                rows={8}
+                variant="outlined"
             />
-        </div>
+            </Box>
 
-        <button type="submit">Submit</button>
-    </form>
-    </>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              sx={{
+                backgroundColor: '#00AC55',   
+                color: '#fff',               
+                height: '55px',               
+                '&:hover': {
+                  backgroundColor: '#408A4E', 
+                },
+              }}
+              fullWidth>
+                send message
+            </Button>
+        </form>
+        )}
+        </Box>
+    </div>        
+    </div>
+
   )
 }
