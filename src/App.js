@@ -1,9 +1,11 @@
-import ContactUS from './components/contactus.jsx'
+import ContactUs from './components/contactus.jsx'
+import ContactsList from './components/contactlist.jsx';
 
 function App() {
   return (
     <div>
-      <ContactUS />
+      <ContactUs />
+      <ContactsList/>
     </div>
   );
 }

@@ -42,29 +42,22 @@ app.get('/contacts', (req, res) => {
   });
 });
 
-// API endpoint to update a contact
-app.put('/contacts/:id', (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, email, phone, additionalInfo } = req.body;
+// API endpoint to update a contact to be verified
+app.put('/contacts/:id/verify', (req, res) => {
+    const { id } = req.params;
 
-  // Validation
-  if (!firstName || !lastName || !email || !phone) {
-    return res.status(400).json({ error: 'All fields except additionalInfo are required' });
-  }
+    const query = `UPDATE contacts SET verified = 1 WHERE id = ?`;
+    db.run(query, [id], function (err) {
+        if (err) {
+        return res.status(500).json({ error: err.message });
+        }
 
-  const query = `UPDATE contacts SET firstName = ?, lastName = ?, email = ?, phone = ?, additionalInfo = ? WHERE id = ?`;
+        if (this.changes === 0) {
+        return res.status(404).json({ error: 'Contact not found' });
+        }
 
-  db.run(query, [firstName, lastName, email, phone, additionalInfo, id], function (err) {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'Contact not found' });
-    }
-
-    res.json({ message: 'Contact updated successfully' });
-  });
+        res.json({ message: 'Contact marked as verified' });
+    });
 });
 
 // API endpoint to delete a contact

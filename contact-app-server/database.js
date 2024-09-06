@@ -10,7 +10,8 @@ db.serialize(() => {
       lastName TEXT NOT NULL,
       email TEXT NOT NULL,
       phone TEXT NOT NULL,
-      additionalInfo TEXT
+      additionalInfo TEXT,
+      verified INTEGER DEFAULT 0 
     )
   `);
 });

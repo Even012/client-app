@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# db
+contact-app-server/contacts.db
+contact-app-server/node_modules
