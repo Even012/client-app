@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  CircularProgress,
+} from '@mui/material';
 
 export default function ContactsList() {
   const [contacts, setContacts] = useState([]);
@@ -10,7 +21,12 @@ export default function ContactsList() {
     const fetchContacts = async () => {
       try {
         const response = await axios.get('http://localhost:8888/contacts');
-        setContacts(response.data);
+        const uniqueContacts = response.data.filter((contact, index, self) =>
+            index === self.findIndex((c) => (
+                c.firstName === contact.firstName && c.lastName === contact.lastName
+            ))
+        );
+        setContacts(uniqueContacts);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching contacts:', error);
@@ -25,7 +41,7 @@ export default function ContactsList() {
   const markAsVerified = async (id) => {
     try {
       await axios.put(`http://localhost:8888/contacts/${id}/verify`);
-      setContacts(contacts.map(contact =>
+      setContacts(contacts.map((contact) =>
         contact.id === id ? { ...contact, verified: 1 } : contact
       ));
     } catch (error) {
@@ -37,39 +53,69 @@ export default function ContactsList() {
   const deleteContact = async (id) => {
     try {
       await axios.delete(`http://localhost:8888/contacts/${id}`);
-      setContacts(contacts.filter(contact => contact.id !== id));
+      setContacts(contacts.filter((contact) => contact.id !== id));
     } catch (error) {
       console.error('Error deleting contact:', error);
     }
   };
 
   if (loading) {
-    return <p>Loading contacts...</p>;
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <CircularProgress />
+        <p>Loading contacts...</p>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h2>Contacts List</h2>
-      {contacts.length === 0 ? (
-        <p>No contacts found.</p>
-      ) : (
-        <ul>
+    <TableContainer 
+      component={Paper}
+      className='mt-8'
+    >
+      <Table aria-label="contacts table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Phone</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {contacts.map((contact) => (
-            <li key={contact.id}>
-              <strong>{contact.firstName} {contact.lastName}</strong> ({contact.email}, {contact.phone})
-              <div>
-                <button
+            <TableRow key={contact.id}>
+              <TableCell>
+                {contact.firstName} {contact.lastName}
+              </TableCell>
+              <TableCell>{contact.email}</TableCell>
+              <TableCell>{contact.phone}</TableCell>
+              <TableCell>
+                {contact.verified === 1 ? 'Verified' : 'Unverified'}
+              </TableCell>
+              <TableCell sx={{minWidth: '240px'}}>
+                <Button
+                  variant="contained"
+                  color={contact.verified === 1 ? 'default' : 'success'}
                   onClick={() => markAsVerified(contact.id)}
                   disabled={contact.verified === 1}
                 >
-                  {contact.verified === 1 ? 'Verified' : 'Mark as verified'}
-                </button>
-                <button onClick={() => deleteContact(contact.id)}>Delete</button>
-              </div>
-            </li>
+                  {contact.verified === 1 ? 'Verified' : 'Verify'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  onClick={() => deleteContact(contact.id)}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Delete
+                </Button>
+              </TableCell>
+            </TableRow>
           ))}
-        </ul>
-      )}
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
