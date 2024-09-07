@@ -52,13 +52,13 @@ export default function ContactUS() {
     };
 
   return (
-    <div className=" p-16 xl:w-[1280px] mx-auto">
-    <Typography variant="body1" gutterBottom sx={{ pl: '2rem', pb: '2rem', fontSize: '2rem',fontWeight: 'bold' }}>
+    <div >
+    <Typography variant="body1" gutterBottom sx={{ pl: '2rem', fontSize: '2rem',fontWeight: 'bold' }} className='pt-4 sm:pt-8 sm:pb-8'>
         Contact us, we love to hear from you
     </Typography>
    
     <div className="flex flex-wrap justify-between items-start">
-        <Box className="w-full md:w-1/2 pr-8 pb-8 pl-8 pt-0">
+        <Box className="w-full md:w-1/2 pr-8 pb-8 pl-8">
             <Typography variant="body1" gutterBottom>
                 Welcome to OpenAgent. We've been around since 2013, and our vision is to make it easy for people to buy, sell and own property.
             </Typography>
