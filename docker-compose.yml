@@ -9,6 +9,7 @@ services:
       - "3000:3000"
     volumes:
       - .:/app  # Mount the client app for live changes
+      - /app/node_modules
     environment:
       - NODE_ENV=production
     depends_on:
@@ -22,5 +23,6 @@ services:
       - "8888:8888"
     volumes:
       - ./contact-app-server:/app         # Mount the server code for live changes
+      - /app/node_modules
     environment:
       - NODE_ENV=production
